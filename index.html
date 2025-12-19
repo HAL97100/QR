@@ -79,11 +79,38 @@
         outline: 2px solid #fb7185;
         outline-offset: 2px;
       }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.75);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 24px;
+        font-size: 1.2rem;
+        letter-spacing: 0.05em;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .overlay--visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .overlay__bubble {
+        background: rgba(15, 23, 42, 0.85);
+        padding: 24px 32px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+        line-height: 1.6;
+      }
     </style>
   </head>
   <body>
     <main class="card" aria-live="polite">
-      <h1 class="card__title">KAWAII‼</h1>
+      <h1 class="card__title">Run to the rescue with love</h1>
       <figure class="card__image">
         <img src="Luke01.jpg">
       </figure>
@@ -91,16 +118,35 @@
         <p class="like-panel__count" id="like-count" aria-live="polite">
           いいね 0 件
         </p>
-        <button class="like-panel__button" id="like-button" type="button" aria-label="この画像にいいねする">
+        <button
+          class="like-panel__button"
+          id="like-button"
+          type="button"
+          aria-label="この画像にいいねする"
+        >
           <span aria-hidden="true">&hearts;</span>
           いいね
         </button>
       </section>
     </main>
+    <div
+      class="overlay"
+      id="like-overlay"
+      role="alert"
+      aria-live="assertive"
+      aria-hidden="true"
+    >
+      <p class="overlay__bubble">
+        あなたは犬好きだと宣言しましたね？<br />
+        ありがとう<br />
+        ございます。
+      </p>
+    </div>
     <script>
       const STORAGE_KEY = "qr-illust-like-count";
       const likeCountEl = document.getElementById("like-count");
       const likeButton = document.getElementById("like-button");
+      const overlayEl = document.getElementById("like-overlay");
 
       const loadCount = () => {
         const stored = localStorage.getItem(STORAGE_KEY);
@@ -118,12 +164,28 @@
       let count = loadCount();
       updateLabel(count);
 
+      const hideOverlay = () => {
+        overlayEl.classList.remove("overlay--visible");
+        overlayEl.setAttribute("aria-hidden", "true");
+      };
+
+      let overlayTimer;
+
+      const showOverlay = () => {
+        overlayEl.classList.add("overlay--visible");
+        overlayEl.setAttribute("aria-hidden", "false");
+        clearTimeout(overlayTimer);
+        overlayTimer = setTimeout(hideOverlay, 2200);
+      };
+
+      overlayEl.addEventListener("click", hideOverlay);
+
       likeButton.addEventListener("click", () => {
         count += 1;
         saveCount(count);
         updateLabel(count);
+        showOverlay();
       });
     </script>
   </body>
 </html>
-
