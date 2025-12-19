@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Herakleitos</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f4f4f4;
+        --fg: #1f2a37;
+        --accent: #f43f5e;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        min-height: 100vh;
+        font-family: "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .card {
+        width: min(520px, 100%);
+        background: #ffffffcc;
+        padding: 24px;
+        border-radius: 18px;
+        box-shadow: 0 20px 40px #0000001a;
+        backdrop-filter: blur(12px);
+      }
+      .card__title {
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+      }
+      .card__image {
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 12px;
+        border: 1px solid #e5e7eb;
+      }
+      .card__image img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .like-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .like-panel__count {
+        font-size: 1rem;
+      }
+      button.like-panel__button {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 999px;
+        padding: 10px 18px;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        transition: transform 0.15s ease, filter 0.2s ease;
+      }
+      button.like-panel__button:active {
+        transform: scale(0.96);
+      }
+      button.like-panel__button:focus-visible {
+        outline: 2px solid #fb7185;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card" aria-live="polite">
+      <h1 class="card__title">KAWAII‼</h1>
+      <figure class="card__image">
+        <img src="Luke01.jpg">
+      </figure>
+      <section class="like-panel">
+        <p class="like-panel__count" id="like-count" aria-live="polite">
+          いいね 0 件
+        </p>
+        <button class="like-panel__button" id="like-button" type="button" aria-label="この画像にいいねする">
+          <span aria-hidden="true">&hearts;</span>
+          いいね
+        </button>
+      </section>
+    </main>
+    <script>
+      const STORAGE_KEY = "qr-illust-like-count";
+      const likeCountEl = document.getElementById("like-count");
+      const likeButton = document.getElementById("like-button");
+
+      const loadCount = () => {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        return Number.parseInt(stored, 10) || 0;
+      };
+
+      const saveCount = (value) => {
+        localStorage.setItem(STORAGE_KEY, String(value));
+      };
+
+      const updateLabel = (count) => {
+        likeCountEl.textContent = `いいね ${count} 件`;
+      };
+
+      let count = loadCount();
+      updateLabel(count);
+
+      likeButton.addEventListener("click", () => {
+        count += 1;
+        saveCount(count);
+        updateLabel(count);
+      });
+    </script>
+  </body>
+</html>
+
