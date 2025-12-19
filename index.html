@@ -62,15 +62,23 @@
         flex: none;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
         font-size: 1rem;
         border: none;
         border-radius: 999px;
-        padding: 10px 18px;
+        padding: 10px 20px;
         background: var(--accent);
         color: #fff;
         cursor: pointer;
         transition: transform 0.15s ease, filter 0.2s ease;
+      }
+      .like-icon {
+        font-size: 1.1rem;
+        line-height: 1;
+      }
+      .like-label {
+        letter-spacing: 0.08em;
+        font-weight: 600;
       }
       button.like-panel__button:active {
         transform: scale(0.96);
@@ -78,6 +86,16 @@
       button.like-panel__button:focus-visible {
         outline: 2px solid #fb7185;
         outline-offset: 2px;
+      }
+      button.like-panel__button[disabled] {
+        background: #d4d9e5;
+        color: #475569;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .like-panel__button--done .like-icon {
+        color: #0ea5e9;
       }
       .overlay {
         position: fixed;
@@ -112,7 +130,7 @@
     <main class="card" aria-live="polite">
       <h1 class="card__title">Run to the rescue with love</h1>
       <figure class="card__image">
-        <img src="Luke01.jpg">
+        <img src="Luke01.jpg"/>
       </figure>
       <section class="like-panel">
         <p class="like-panel__count" id="like-count" aria-live="polite">
@@ -123,9 +141,10 @@
           id="like-button"
           type="button"
           aria-label="この画像にいいねする"
+          aria-pressed="false"
         >
-          <span aria-hidden="true">&hearts;</span>
-          いいね
+          <span aria-hidden="true" class="like-icon">&hearts;</span>
+          <span class="like-label">いいね</span>
         </button>
       </section>
     </main>
@@ -136,17 +155,20 @@
       aria-live="assertive"
       aria-hidden="true"
     >
-      <p class="overlay__bubble">
+      <p class="overlay__bubble" id="like-message">
         あなたは犬好きだと宣言しましたね？<br />
-        ありがとう<br />
-        ございます。
+        あなたは 0 人目の宣言者です。<br />
+        ありがとうございます。
       </p>
     </div>
     <script>
       const STORAGE_KEY = "qr-illust-like-count";
+      const LIKED_KEY = "qr-illust-liked-lock";
       const likeCountEl = document.getElementById("like-count");
       const likeButton = document.getElementById("like-button");
       const overlayEl = document.getElementById("like-overlay");
+      const likeLabel = likeButton.querySelector(".like-label");
+      const overlayMessage = document.getElementById("like-message");
 
       const loadCount = () => {
         const stored = localStorage.getItem(STORAGE_KEY);
@@ -171,7 +193,8 @@
 
       let overlayTimer;
 
-      const showOverlay = () => {
+      const showOverlay = (currentCount) => {
+        overlayMessage.innerHTML = `いいねありがとうございます！<br />あなたは${currentCount}人目の応援者です。`;
         overlayEl.classList.add("overlay--visible");
         overlayEl.setAttribute("aria-hidden", "false");
         clearTimeout(overlayTimer);
@@ -180,11 +203,32 @@
 
       overlayEl.addEventListener("click", hideOverlay);
 
+      let likedThisDevice = localStorage.getItem(LIKED_KEY) === "true";
+
+      const lockLikeButton = (shouldPersist = true) => {
+        likedThisDevice = true;
+        likeButton.disabled = true;
+        likeButton.classList.add("like-panel__button--done");
+        likeButton.setAttribute("aria-pressed", "true");
+        likeLabel.textContent = "ありがとう";
+        if (shouldPersist) {
+          localStorage.setItem(LIKED_KEY, "true");
+        }
+      };
+
+      if (likedThisDevice) {
+        lockLikeButton(false);
+      }
+
       likeButton.addEventListener("click", () => {
+        if (likedThisDevice) {
+          return;
+        }
         count += 1;
         saveCount(count);
         updateLabel(count);
-        showOverlay();
+        showOverlay(count);
+        lockLikeButton();
       });
     </script>
   </body>
