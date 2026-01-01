@@ -97,6 +97,38 @@
       .like-panel__button--done .like-icon {
         color: #0ea5e9;
       }
+      .profile {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .profile__title {
+        font-size: 1.2rem;
+      }
+      .profile__list {
+        display: grid;
+        gap: 12px;
+      }
+      .profile__item dt {
+        font-weight: 600;
+        margin-bottom: 4px;
+        letter-spacing: 0.02em;
+      }
+      .profile__item dd {
+        margin-left: 0;
+        line-height: 1.6;
+      }
+      .profile a {
+        color: #0ea5e9;
+        text-decoration: none;
+      }
+      .profile a:focus-visible,
+      .profile a:hover {
+        text-decoration: underline;
+      }
       .overlay {
         position: fixed;
         inset: 0;
@@ -146,6 +178,42 @@
           <span aria-hidden="true" class="like-icon">&hearts;</span>
           <span class="like-label">いいね</span>
         </button>
+      </section>
+      <section class="profile" aria-labelledby="profile-title">
+        <h2 class="profile__title" id="profile-title">作者プロフィール</h2>
+        <dl class="profile__list">
+          <div class="profile__item">
+            <dt>ニックネーム／活動名</dt>
+            <dd>Herakleitos Lab</dd>
+          </div>
+          <div class="profile__item">
+            <dt>好きなテーマ・興味</dt>
+            <dd>
+              オルタナティブロックの音作り、夜の横浜の街並み、クラフト感のあるアナログ機材探し
+            </dd>
+          </div>
+          <div class="profile__item">
+            <dt>制作理由・背景</dt>
+            <dd>
+              Webとビジュアルを組み合わせて「気持ちが上がる瞬間」をどう再現できるかという実験として制作しました。
+            </dd>
+          </div>
+          <div class="profile__item">
+            <dt>得意なスキル／制作環境</dt>
+            <dd>TypeScript、Canvas API、Figma、Ableton Live</dd>
+          </div>
+          <div class="profile__item">
+            <dt>リンク</dt>
+            <dd>
+              <a href="https://x.com/herakleitos_lab" target="_blank" rel="noopener noreferrer">X (旧Twitter)</a> ／
+              <a href="https://herakleitos.dev" target="_blank" rel="noopener noreferrer">Blog</a>
+            </dd>
+          </div>
+          <div class="profile__item">
+            <dt>連絡方針</dt>
+            <dd>XのDMで要件を受付→必要に応じてGitHub Issueを立てていただくフローを採用しています。</dd>
+          </div>
+        </dl>
       </section>
     </main>
     <div
